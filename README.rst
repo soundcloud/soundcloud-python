@@ -39,6 +39,64 @@ The client instance can then be used to fetch or modify resources: ::
 Authentication
 --------------
 
+All `OAuth2 authorization flows`_ supported by the Soundcloud API are
+available in soundcloud-python. If you only need read-only access to
+public resources, simply provide a client id when creating a `Client`
+instance: ::
+
+    import soundcloud
+
+    track = client.get('/tracks/30709985')
+    print track.title
+
+If however, you need to access private resources or modify a resource,
+you will need to have a user delegate access to your application. To do
+this, you can use one of the following OAuth2 authorization flows.
+
+**User Agent Flow**
+
+The `User Agent Flow`_ involves redirecting the user to soundcloud.com 
+where they will log in and grant access to your application: ::
+
+    import soundcloud
+
+    client = soundcloud.Client(
+        client_id=YOUR_CLIENT_ID,
+        client_secret=YOUR_CLIENT_SECRET,
+        redirect_uri='http://yourapp.com/callback'
+    )
+    redirect(client.authorize_url())
+
+Note that `redirect_uri` must match the value you provided when you 
+registered your application. After granting access, the user will be redirected
+to this uri, at which point your application can exchange the returned code
+for an access token: ::
+
+    access_token, expires, scope, refresh_token = client.exchange_token(
+        code=request.args.get('code'))
+    render_text("Hi There, %s" % client.get('/me').username)
+
+
+**User Credentials Flow**
+
+The `User Credentials Flow`_ allows you to exchange a username and password for
+an access token. Be cautious about using this flow, it's not very kind to ask your
+users for their password, but may be necessary in some use cases: ::
+
+    import soundcloud
+
+    client = soundcloud.Client(
+        client_id=YOUR_CLIENT_ID,
+        client_secret=YOUR_CLIENT_SECRET,
+        username='jane@example.com',
+        password='janespassword'
+    )
+    print client.get('/me').username
+
+.. _`OAuth2 authorization flows`: http://developers.soundcloud.com/docs/api/authentication
+.. _`User Agent Flow`: http://developers.soundcloud.com/docs/api/authentication#user-agent-flow
+.. _`User Credentials Flow`: http://developers.soundcloud.com/docs/api/authentication#user-credentials-flow
+
 Examples
 --------
 
