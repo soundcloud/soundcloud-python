@@ -2,7 +2,8 @@
 soundcloud-python
 =================
 
-A friendly wrapper around the `Soundcloud API`_. Right now it is just a README file!
+A friendly wrapper around the `Soundcloud API`_. Right now it is just
+a README file!
 
 .. _Soundcloud API: http://developers.soundcloud.com/
 
@@ -20,7 +21,9 @@ Or if you're not hip to the pip: ::
 Basic Use
 ---------
 
-To use soundcloud-python, you must first create a `Client` instance, passing at a minimum the client id you obtained when you `registered your app`_: ::
+To use soundcloud-python, you must first create a `Client` instance,
+passing at a minimum the client id you obtained when you `registered
+your app`_: ::
 
     import soundcloud
     
@@ -67,10 +70,10 @@ where they will log in and grant access to your application: ::
     )
     redirect(client.authorize_url())
 
-Note that `redirect_uri` must match the value you provided when you 
-registered your application. After granting access, the user will be redirected
-to this uri, at which point your application can exchange the returned code
-for an access token: ::
+Note that `redirect_uri` must match the value you provided when you
+registered your application. After granting access, the user will be
+redirected to this uri, at which point your application can exchange
+the returned code for an access token: ::
 
     access_token, expires, scope, refresh_token = client.exchange_token(
         code=request.args.get('code'))
@@ -79,9 +82,10 @@ for an access token: ::
 
 **User Credentials Flow**
 
-The `User Credentials Flow`_ allows you to exchange a username and password for
-an access token. Be cautious about using this flow, it's not very kind to ask your
-users for their password, but may be necessary in some use cases: ::
+The `User Credentials Flow`_ allows you to exchange a username and
+password for an access token. Be cautious about using this flow, it's
+not very kind to ask your users for their password, but may be
+necessary in some use cases: ::
 
     import soundcloud
 
@@ -130,7 +134,8 @@ Adding a track to a playlist: ::
 Contributing
 ------------
 
-Contributions are awesome. You are most welcome to `submit issues`_, `discuss soundcloud-python`_ or `fork the repository`_.
+Contributions are awesome. You are most welcome to `submit issues`_,
+`discuss soundcloud-python`_ or `fork the repository`_.
 
 .. _`submit issues`: https://github.com/soundcloud/soundcloud-python/issues
 .. _`discuss soundcloud-python`: https://groups.google.com/group/soundcloudapi
