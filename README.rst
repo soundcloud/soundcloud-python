@@ -2,8 +2,7 @@
 soundcloud-python
 =================
 
-A friendly wrapper around the `Soundcloud API`_. Right now it is just
-a README file!
+A friendly wrapper around the `Soundcloud API`_.
 
 .. _Soundcloud API: http://developers.soundcloud.com/
 
