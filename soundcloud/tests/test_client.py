@@ -1,5 +1,7 @@
 import soundcloud
 
+from soundcloud.tests.utils import MockResponse
+
 from urllib import urlencode
 
 from nose.tools import eq_, raises
@@ -79,7 +81,8 @@ def test_method_dispatching_get_request_readonly(fake_get):
             'client_id': 'foo'
         }))
     (fake_get.expects_call()
-             .with_args(expected_url))
+             .with_args(expected_url)
+             .returns(MockResponse("{}")))
     client.get('tracks', order='hotness', limit=5)
 
 
@@ -96,5 +99,6 @@ def test_method_dispatching_post_request(fake_post):
         'client_id': 'foo'
     }
     (fake_post.expects_call()
-              .with_args(expected_url, data=data))
+              .with_args(expected_url, data=data)
+              .returns(MockResponse("{}")))
     client.post('tracks')

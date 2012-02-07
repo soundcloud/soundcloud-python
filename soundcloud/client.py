@@ -3,6 +3,8 @@ from urllib import urlencode
 
 import requests
 
+from soundcloud.resource import wrapped_resource
+
 
 class Client(object):
     """A client for interacting with Soundcloud resources."""
@@ -45,7 +47,7 @@ class Client(object):
         else:
             result = request_func(url, data=kwargs)
 
-        return result
+        return wrapped_resource(result)
 
     def __getattr__(self, name):
         """Translate an HTTP verb into a request method."""
