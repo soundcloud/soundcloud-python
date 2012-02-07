@@ -48,6 +48,7 @@ instance: ::
 
     import soundcloud
 
+    client = soundcloud.client(client_id=YOUR_CLIENT_ID)
     track = client.get('/tracks/30709985')
     print track.title
 
