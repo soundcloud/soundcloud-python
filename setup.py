@@ -1,10 +1,18 @@
+import re
+
 from setuptools import setup
 
-import soundcloud
+version = None
+for line in open('./soundcloud/__init__.py'):
+    m = re.search('__version__\s*=\s*(.*)', line)
+    if m:
+        version = m.group(1).strip()[1:-1]  # quotes
+        break
+assert version
 
 setup(
     name='soundcloud',
-    version=soundcloud.__version__,
+    version=version,
     description='A friendly wrapper library for the Soundcloud API',
     author='Paul Osman',
     author_email='osman@soundcloud.com',
