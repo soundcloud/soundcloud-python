@@ -27,7 +27,7 @@ setup(
         'nose==1.1.2',
         'fudge==1.0.3',
         'requests==0.10.1',
-        'simplejson==2.3.2',
+        'simplejson>=2.0',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
