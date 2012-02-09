@@ -13,28 +13,23 @@ def test_kwargs_parsing_valid():
     client = soundcloud.Client(client_id='foo', client_secret='foo')
     assert isinstance(client, soundcloud.Client)
     eq_('foo', client.client_id)
-    eq_('foo', client.client_secret)
     client = soundcloud.Client(client_id='foo', client_secret='bar',
                                access_token='baz', username='you',
                                password='secret', redirect_uri='foooo')
     eq_('foo', client.client_id)
-    eq_('bar', client.client_secret)
     eq_('baz', client.access_token)
-    eq_('you', client.username)
-    eq_('secret', client.password)
-    eq_('foooo', client.redirect_uri)
 
 
 @raises(AttributeError)
 def test_kwargs_parsing_invalid():
     """Test that unknown kwargs are ignored."""
-    client = soundcloud.Client(foo='bar')
+    client = soundcloud.Client(foo='bar', client_id='bar')
     client.foo
 
 
 def test_url_creation():
     """Test that resources are turned into urls properly."""
-    client = soundcloud.Client()
+    client = soundcloud.Client(client_id='foo')
     url = client._resolve_resource_name('tracks')
     eq_('https://api.soundcloud.com/tracks.json', url)
     url = client._resolve_resource_name('/tracks/')
@@ -43,9 +38,8 @@ def test_url_creation():
 
 def test_url_creation_options():
     """Test that resource resolving works with different options."""
-    client = soundcloud.Client()
+    client = soundcloud.Client(client_id='foo', use_ssl=False)
     client.host = 'soundcloud.dev'
-    client.use_ssl = False
     url = client._resolve_resource_name('apps/132445')
     eq_('http://soundcloud.dev/apps/132445.json', url)
 
