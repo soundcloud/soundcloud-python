@@ -4,6 +4,7 @@ from urllib import urlencode
 import requests
 
 from soundcloud.resource import wrapped_resource
+from soundcloud.request import make_request
 
 
 class Client(object):
@@ -97,21 +98,14 @@ class Client(object):
         """Given an HTTP method, a resource name and kwargs, construct a
         request and return the response.
         """
-        request_func = getattr(requests, method)
         url = self._resolve_resource_name(resource)
 
         if hasattr(self, 'access_token'):
-            kwargs = dict(oauth_token=self.access_token)
+            kwargs.update(dict(oauth_token=self.access_token))
         if hasattr(self, 'client_id'):
             kwargs.update(dict(client_id=self.client_id))
 
-        if method == 'get':
-            qs = urlencode(kwargs)
-            result = request_func('%s?%s' % (url, qs))
-        else:
-            result = request_func(url, data=kwargs)
-
-        return wrapped_resource(result)
+        return wrapped_resource(make_request(method, url, kwargs))
 
     def __getattr__(self, name):
         """Translate an HTTP verb into a request method."""
