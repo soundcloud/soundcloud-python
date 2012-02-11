@@ -56,9 +56,9 @@ If however, you need to access private resources or modify a resource,
 you will need to have a user delegate access to your application. To do
 this, you can use one of the following OAuth2 authorization flows.
 
-**User Agent Flow**
+**Authorization Code Flow**
 
-The `User Agent Flow`_ involves redirecting the user to soundcloud.com 
+The `Authorization Code Flow`_ involves redirecting the user to soundcloud.com 
 where they will log in and grant access to your application: ::
 
     import soundcloud
@@ -98,38 +98,25 @@ necessary in some use cases: ::
     print client.get('/me').username
 
 .. _`OAuth2 authorization flows`: http://developers.soundcloud.com/docs/api/authentication
-.. _`User Agent Flow`: http://developers.soundcloud.com/docs/api/authentication#user-agent-flow
+.. _`Authorization Code Flow`: http://developers.soundcloud.com/docs/api/authentication#user-agent-flow
 .. _`User Credentials Flow`: http://developers.soundcloud.com/docs/api/authentication#user-credentials-flow
 
 Examples
 --------
 
-Adding a track to a playlist: ::
+Uploading a track: ::
 
     import soundcloud
 
     client = soundcloud.Client(access_token="a valid access token")
 
-    # get my last playlist
-    playlist = client.get('/me/playlists')[0]
-
-    # get ids of contained tracks
-    track_ids = [t.id for t in playlist.tracks]
-    
-    # adding a new track 21778201
-    track_ids.append(21778201)
-
-    # map array of ids to array of track objects:
-    tracks = map(lambda track_id: dict(track_id=track_id), track_ids)
-
-    # send update/put request to playlist
-    playlist = client.put(playlist.uri, playlist={
-        'tracks': tracks
+    track = client.post('/tracks', track={
+        'title': 'This is a sample track',
+        'sharing': 'private',
+        'asset_data': open('mytrack.mp4', 'rb')
     })
 
-    # print the list of track ids of the updated playlist:
-    print [t.id for t in playlist.tracks]
-
+    print track.title
 
 Contributing
 ------------
