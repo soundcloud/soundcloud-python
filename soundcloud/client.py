@@ -1,8 +1,6 @@
 from functools import partial
 from urllib import urlencode
 
-import requests
-
 from soundcloud.resource import wrapped_resource
 from soundcloud.request import make_request
 
@@ -52,8 +50,7 @@ class Client(object):
             'client_secret': self.options.get('client_secret'),
             'code': code,
         }
-        self.token = wrapped_resource(
-            requests.post(url, data=options))
+        self.token = wrapped_resource(make_request('post', url, options))
         self.access_token = self.token.access_token
         return self.token
 
@@ -77,8 +74,7 @@ class Client(object):
             'client_secret': self.options.get('client_secret'),
             'refresh_token': self.options.get('refresh_token')
         }
-        self.token = wrapped_resource(
-            requests.post(url, data=options))
+        self.token = wrapped_resource(make_request('post', url, options))
         self.access_token = self.token.access_token
 
     def _credentials_flow(self):
@@ -91,7 +87,7 @@ class Client(object):
             'password': self.options.get('password'),
             'grant_type': 'password'
         }
-        self.token = wrapped_resource(requests.post(url, data=options))
+        self.token = wrapped_resource(make_request('post', url, options))
         self.access_token = self.token.access_token
 
     def _request(self, method, resource, **kwargs):
@@ -115,10 +111,10 @@ class Client(object):
 
     def _resolve_resource_name(self, name):
         """Convert a resource name (e.g. tracks) into a URI."""
-        if name[:4] == 'http':
+        if name[:4] == 'http':  # already a url
             if name[:4] != 'json':
                 return '%s.json' % (name,)
-            return name  # already a url
+            return name
         name = name.rstrip('/').lstrip('/')
         return '%s%s/%s.json' % (self.scheme, self.host, name)
 
