@@ -23,7 +23,7 @@ setup(
     package_data={
         '': ['README.rst']
     },
-    setup_requires=[
+    install_requires=[
         'nose==1.1.2',
         'fudge==1.0.3',
         'requests==0.10.1',
