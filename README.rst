@@ -118,6 +118,17 @@ Uploading a track: ::
 
     print track.title
 
+Running Tests
+-------------
+
+To run the tests, run: ::
+
+    $ pip install -r requirements.txt
+    $ nosetests --with-doctest
+    ..................
+    
+Success!
+
 Contributing
 ------------
 
