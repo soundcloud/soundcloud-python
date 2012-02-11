@@ -115,6 +115,10 @@ class Client(object):
 
     def _resolve_resource_name(self, name):
         """Convert a resource name (e.g. tracks) into a URI."""
+        if name[:4] == 'http':
+            if name[:4] != 'json':
+                return '%s.json' % (name,)
+            return name  # already a url
         name = name.rstrip('/').lstrip('/')
         return '%s%s/%s.json' % (self.scheme, self.host, name)
 
