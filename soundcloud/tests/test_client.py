@@ -61,6 +61,24 @@ def test_host_config():
     eq_('api.soundcloud.com', client.host)
 
 
+@patch('requests.get')
+def test_disabling_ssl_verification(fake_get):
+    """We should be able to disable ssl verification when we are in dev mode"""
+    client = soundcloud.Client(client_id='foo', host='api.soundcloud.dev',
+                               verify_ssl=False)
+    expected_url = '%s?%s' % (
+        client._resolve_resource_name('tracks'),
+        urlencode({
+            'order': 'hotness',
+            'limit': 5,
+            'client_id': 'foo'
+        }))
+    (fake_get.expects_call()
+             .with_args(expected_url, verify_ssl=False)
+             .returns(MockResponse("{}")))
+    client.get('tracks', order='hotness', limit=5)
+
+
 @raises(AttributeError)
 def test_method_dispatching_invalid_method():
     """Test that getattr raises an attributeerror if we give it garbage."""

@@ -51,7 +51,9 @@ class Client(object):
             'client_secret': self.options.get('client_secret'),
             'code': code,
         }
-        self.token = wrapped_resource(make_request('post', url, options))
+        verify_ssl = self.options.get('verify_ssl', True)
+        self.token = wrapped_resource(
+            make_request('post', url, options, verify_ssl))
         self.access_token = self.token.access_token
         return self.token
 
@@ -75,7 +77,9 @@ class Client(object):
             'client_secret': self.options.get('client_secret'),
             'refresh_token': self.options.get('refresh_token')
         }
-        self.token = wrapped_resource(make_request('post', url, options))
+        verify_ssl = self.options.get('verify_ssl', True)
+        self.token = wrapped_resource(
+            make_request('post', url, options, verify_ssl))
         self.access_token = self.token.access_token
 
     def _credentials_flow(self):
@@ -88,7 +92,9 @@ class Client(object):
             'password': self.options.get('password'),
             'grant_type': 'password'
         }
-        self.token = wrapped_resource(make_request('post', url, options))
+        verify_ssl = self.options.get('verify_ssl', True)
+        self.token = wrapped_resource(
+            make_request('post', url, options, verify_ssl))
         self.access_token = self.token.access_token
 
     def _request(self, method, resource, **kwargs):
@@ -102,7 +108,8 @@ class Client(object):
         if hasattr(self, 'client_id'):
             kwargs.update(dict(client_id=self.client_id))
 
-        return wrapped_resource(make_request(method, url, kwargs))
+        verify_ssl = self.options.get('verify_ssl', True)
+        return wrapped_resource(make_request(method, url, kwargs, verify_ssl))
 
     def __getattr__(self, name):
         """Translate an HTTP verb into a request method."""

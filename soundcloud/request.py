@@ -117,7 +117,7 @@ def namespaced_query_string(d, prefix=""):
     return qs
 
 
-def make_request(method, url, params, **kwargs):
+def make_request(method, url, params, verify_ssl=False):
     """Make an HTTP request, formatting params as required."""
     empty = []
     for key, value in params.iteritems():
@@ -133,13 +133,18 @@ def make_request(method, url, params, **kwargs):
     if request_func is None:
         raise TypeError('Unknown method: %s' % (method,))
 
+    kwargs = {}
     if method == 'get':
+        if not verify_ssl:
+            kwargs['verify_ssl'] = False
         qs = urllib.urlencode(data)
-        result = request_func('%s?%s' % (url, qs))
+        result = request_func('%s?%s' % (url, qs), **kwargs)
     else:
         kwargs['data'] = data
         if files:
             kwargs['files'] = files
+        if not verify_ssl:
+            kwargs['verify_ssl'] = False
         result = request_func(url, **kwargs)
 
     return result
