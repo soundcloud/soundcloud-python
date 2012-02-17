@@ -16,6 +16,7 @@ class Client(object):
         be passed in as kwargs.
         """
         self.use_ssl = kwargs.get('use_ssl', self.use_ssl)
+        self.host = kwargs.get('host', self.host)
         self.scheme = self.use_ssl and 'https://' or 'http://'
         self.options = kwargs
 

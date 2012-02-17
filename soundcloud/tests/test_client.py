@@ -53,6 +53,14 @@ def test_method_dispatching():
         eq_('_request', p.func.__name__)
 
 
+def test_host_config():
+    """We should be able to set the host on the client."""
+    client = soundcloud.Client(client_id='foo', host='api.soundcloud.dev')
+    eq_('api.soundcloud.dev', client.host)
+    client = soundcloud.Client(client_id='foo')
+    eq_('api.soundcloud.com', client.host)
+
+
 @raises(AttributeError)
 def test_method_dispatching_invalid_method():
     """Test that getattr raises an attributeerror if we give it garbage."""
