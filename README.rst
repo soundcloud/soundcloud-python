@@ -104,7 +104,17 @@ necessary in some use cases: ::
 Examples
 --------
 
-Uploading a track: ::
+Resolve a track and print its id: ::
+
+    import soundcloud
+
+    client = soundcloud.Client(client_id=YOUR_CLIENT_ID)
+
+    track = client.get('/resolve', url='http://soundcloud.com/forss/flickermood')
+
+    print track.id
+
+Upload a track: ::
 
     import soundcloud
 
@@ -117,6 +127,23 @@ Uploading a track: ::
     })
 
     print track.title
+
+Start following a user: ::
+
+    import soundcloud
+
+    client = soundcloud.Client(access_token="a valid access token")
+    user_id_to_follow = 123
+    client.put('/me/followings/%d' % user_id_to_follow)
+
+Update your profile description: ::
+
+    import soundcloud
+
+    client = soundcloud.Client(access_token="a valid access token")
+    client.put('/me', user={
+        'description': "a new description"
+    })
 
 Running Tests
 -------------
