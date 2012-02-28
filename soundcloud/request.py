@@ -18,7 +18,15 @@ writer = codecs.lookup('utf-8')[3]
 
 
 def encode_multipart_formdata(fields, boundary=None):
-    """Fix rack."""
+    """Fix bug in multipart/form-data POST request handling.
+
+    For some reason, the specific combination of Rack + Ruby + Rails versions
+    that we are using in production has trouble handling multipart/form-data
+    POST requests where the non-binary parts have a Content-Type header. To
+    get around this, we just monkey patch the ```encode_multipart_formdata```
+    function in ```urllib3``` and modify it to *not* set the Content-Type
+    header on non-binary parts.
+    """
     body = BytesIO()
     if boundary is None:
         boundary = choose_boundary()
