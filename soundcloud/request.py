@@ -134,17 +134,16 @@ def make_request(method, url, params, verify_ssl=False):
         raise TypeError('Unknown method: %s' % (method,))
 
     kwargs = {}
+    if not verify_ssl:
+        kwargs['verify_ssl'] = False
+
     if method == 'get':
-        if not verify_ssl:
-            kwargs['verify_ssl'] = False
         qs = urllib.urlencode(data)
         result = request_func('%s?%s' % (url, qs), **kwargs)
     else:
         kwargs['data'] = data
         if files:
             kwargs['files'] = files
-        if not verify_ssl:
-            kwargs['verify_ssl'] = False
         result = request_func(url, **kwargs)
 
     return result
