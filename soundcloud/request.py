@@ -147,4 +147,5 @@ def make_request(method, url, params, verify_ssl=False):
             kwargs['verify_ssl'] = False
         result = request_func(url, **kwargs)
 
+    result.raise_for_status()
     return result
