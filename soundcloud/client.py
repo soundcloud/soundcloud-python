@@ -19,6 +19,7 @@ class Client(object):
         self.host = kwargs.get('host', self.host)
         self.scheme = self.use_ssl and 'https://' or 'http://'
         self.options = kwargs
+        self._authorize_url = None
 
         self.client_id = kwargs.get('client_id')
 
@@ -57,6 +58,10 @@ class Client(object):
         self.access_token = self.token.access_token
         return self.token
 
+    def authorize_url(self):
+        """Return the authorization URL for OAuth2 authorization code flow."""
+        return self._authorize_url
+
     def _authorization_code_flow(self):
         """Build the the auth URL so the user can authorize the app."""
         options = {
@@ -66,7 +71,7 @@ class Client(object):
             'redirect_uri': self.options.get('redirect_uri')
         }
         url = '%s%s/connect' % (self.scheme, self.host)
-        self.authorize_url = '%s?%s' % (url, urlencode(options))
+        self._authorize_url = '%s?%s' % (url, urlencode(options))
 
     def _refresh_token_flow(self):
         """Given a refresh token, obtain a new access token."""

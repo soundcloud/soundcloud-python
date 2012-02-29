@@ -44,7 +44,7 @@ def test_authorize_url_construction():
         'client_id': 'foo',
         'response_type': 'code',
         'redirect_uri': 'http://example.com/callback'
-     }),), client.authorize_url)
+     }),), client.authorize_url())
 
 
 @fudge.patch('requests.post')
@@ -71,7 +71,7 @@ def test_exchange_code_expiring(fake):
             'client_id': 'foo',
             'response_type': 'code',
             'redirect_uri': 'http://example.com/callback'
-        }),), client.authorize_url)
+        }),), client.authorize_url())
         token = client.exchange_token('this-is-a-code')
         eq_('access-1234', token.access_token)
         eq_('refresh-1234', token.refresh_token)
