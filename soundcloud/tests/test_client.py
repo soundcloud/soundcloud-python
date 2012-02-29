@@ -73,8 +73,11 @@ def test_disabling_ssl_verification(fake_get):
             'limit': 5,
             'client_id': 'foo'
         }))
+    headers = {
+        'User-Agent': soundcloud.USER_AGENT
+    }
     (fake_get.expects_call()
-             .with_args(expected_url, verify_ssl=False)
+             .with_args(expected_url, verify_ssl=False, headers=headers)
              .returns(MockResponse("{}")))
     client.get('tracks', order='hotness', limit=5)
 
@@ -100,8 +103,11 @@ def test_method_dispatching_get_request_readonly(fake_get):
             'limit': 5,
             'client_id': 'foo'
         }))
+    headers = {
+        'User-Agent': soundcloud.USER_AGENT
+    }
     (fake_get.expects_call()
-             .with_args(expected_url)
+             .with_args(expected_url, headers=headers)
              .returns(MockResponse("{}")))
     client.get('tracks', order='hotness', limit=5)
 
@@ -118,7 +124,10 @@ def test_method_dispatching_post_request(fake_post):
     data = {
         'client_id': 'foo'
     }
+    headers = {
+        'User-Agent': soundcloud.USER_AGENT
+    }
     (fake_post.expects_call()
-              .with_args(expected_url, data=data)
+              .with_args(expected_url, data=data, headers=headers)
               .returns(MockResponse("{}")))
     client.post('tracks')

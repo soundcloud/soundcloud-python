@@ -14,6 +14,8 @@ from requests.packages.urllib3.packages import six
 from requests.packages.urllib3.packages.six import b
 from requests.packages.urllib3.filepost import get_content_type
 
+import soundcloud
+
 writer = codecs.lookup('utf-8')[3]
 
 
@@ -141,7 +143,11 @@ def make_request(method, url, params, verify_ssl=False):
     if request_func is None:
         raise TypeError('Unknown method: %s' % (method,))
 
-    kwargs = {}
+    kwargs = {
+        'headers': {
+            'User-Agent': soundcloud.USER_AGENT
+        }
+    }
     if not verify_ssl:
         kwargs['verify_ssl'] = False
 
