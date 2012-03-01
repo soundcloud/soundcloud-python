@@ -133,7 +133,14 @@ def make_request(method, url, params, verify_ssl=False):
     if request_func is None:
         raise TypeError('Unknown method: %s' % (method,))
 
-    kwargs = {}
+    # allow caller to disable automatic following of redirects
+    allow_redirects = params.get('allow_redirects', True)
+    kwargs = {
+        'allow_redirects': allow_redirects
+    }
+    if 'allow_redirects' in data:
+        del data['allow_redirects']
+
     if method == 'get':
         if not verify_ssl:
             kwargs['verify_ssl'] = False
@@ -147,5 +154,10 @@ def make_request(method, url, params, verify_ssl=False):
             kwargs['verify_ssl'] = False
         result = request_func(url, **kwargs)
 
-    result.raise_for_status()
+    # if redirects are disabled, don't raise for 301 / 302
+    if result.status_code in [301, 302]:
+        if allow_redirects:
+            result.raise_for_status()
+    else:
+        result.raise_for_status()
     return result
