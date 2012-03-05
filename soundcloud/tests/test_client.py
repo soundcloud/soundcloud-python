@@ -79,7 +79,7 @@ def test_disabling_ssl_verification(fake_get):
     (fake_get.expects_call()
              .with_args(expected_url,
                         headers=headers,
-                        verify_ssl=False,
+                        verify=False,
                         allow_redirects=True)
              .returns(MockResponse("{}")))
     client.get('tracks', order='hotness', limit=5)
