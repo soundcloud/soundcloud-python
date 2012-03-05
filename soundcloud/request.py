@@ -148,7 +148,7 @@ def make_request(method, url, params):
     # options, not params
     if 'verify_ssl' in params:
         if params['verify_ssl'] is False:
-            kwargs['verify_ssl'] = params['verify_ssl']
+            kwargs['verify'] = params['verify_ssl']
         del params['verify_ssl']
     if 'proxies' in params:
         kwargs['proxies'] = params['proxies']
