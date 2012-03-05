@@ -39,7 +39,11 @@ def wrapped_resource(response):
     Lists will be returned as a ```ResourceList``` instance,
     dicts will be returned as a ```Resource``` instance.
     """
-    content = json.loads(response.content)
+    try:
+        content = json.loads(response.content)
+    except ValueError:
+        # not JSON
+        content = response.content
     if isinstance(content, list):
         result = ResourceList(content)
     else:

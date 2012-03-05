@@ -136,7 +136,11 @@ def make_request(method, url, params):
     for key in empty:
         del params[key]
 
+    # allow caller to disable automatic following of redirects
+    allow_redirects = params.get('allow_redirects', True)
+
     kwargs = {
+        'allow_redirects': allow_redirects,
         'headers': {
             'User-Agent': soundcloud.USER_AGENT
         }
@@ -149,6 +153,8 @@ def make_request(method, url, params):
     if 'proxies' in params:
         kwargs['proxies'] = params['proxies']
         del params['proxies']
+    if 'allow_redirects' in params:
+        del params['allow_redirects']
 
     files = namespaced_query_string(extract_files_from_dict(params))
     data = namespaced_query_string(remove_files_from_dict(params))
@@ -166,4 +172,10 @@ def make_request(method, url, params):
             kwargs['files'] = files
         result = request_func(url, **kwargs)
 
+    # if redirects are disabled, don't raise for 301 / 302
+    if result.status_code in [301, 302]:
+        if allow_redirects:
+            result.raise_for_status()
+    else:
+        result.raise_for_status()
     return result

@@ -145,6 +145,19 @@ Update your profile description: ::
         'description': "a new description"
     })
 
+Redirects
+---------
+
+By default, 301 or 302 redirects will be followed for idempotent methods. There are certain cases where you may want to disable this, for example: ::
+
+    import soundcloud
+
+    client = soundcloud.Client(access_token="a valid access token")
+    track = client.get('/tracks/293/stream', allow_redirects=False)
+    print track.location
+
+Will print a tracks streaming URL. If ``allow_redirects`` was omitted, a binary stream would be returned instead.
+
 Running Tests
 -------------
 
