@@ -127,7 +127,7 @@ def namespaced_query_string(d, prefix=""):
     return qs
 
 
-def make_request(method, url, params, verify_ssl=False):
+def make_request(method, url, params):
     """Make an HTTP request, formatting params as required."""
     empty = []
     for key, value in params.iteritems():
@@ -138,7 +138,6 @@ def make_request(method, url, params, verify_ssl=False):
 
     files = namespaced_query_string(extract_files_from_dict(params))
     data = namespaced_query_string(remove_files_from_dict(params))
-
     request_func = getattr(requests, method, None)
     if request_func is None:
         raise TypeError('Unknown method: %s' % (method,))
@@ -148,8 +147,15 @@ def make_request(method, url, params, verify_ssl=False):
             'User-Agent': soundcloud.USER_AGENT
         }
     }
-    if not verify_ssl:
-        kwargs['verify_ssl'] = False
+
+    # options, not params
+    if 'verify_ssl' in data:
+        if data['verify_ssl'] is False:
+            kwargs['verify_ssl'] = data['verify_ssl']
+        del data['verify_ssl']
+    if 'proxies' in data:
+        kwargs['proxies'] = data['proxies']
+        del data['proxies']
 
     if method == 'get':
         qs = urllib.urlencode(data)
