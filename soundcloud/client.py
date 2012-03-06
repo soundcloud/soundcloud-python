@@ -52,9 +52,12 @@ class Client(object):
             'client_secret': self.options.get('client_secret'),
             'code': code,
         }
-        verify_ssl = self.options.get('verify_ssl', True)
+        options.update({
+            'verify_ssl': self.options.get('verify_ssl', True),
+            'proxies': self.options.get('proxies', None)
+        })
         self.token = wrapped_resource(
-            make_request('post', url, options, verify_ssl))
+            make_request('post', url, options))
         self.access_token = self.token.access_token
         return self.token
 
@@ -82,9 +85,12 @@ class Client(object):
             'client_secret': self.options.get('client_secret'),
             'refresh_token': self.options.get('refresh_token')
         }
-        verify_ssl = self.options.get('verify_ssl', True)
+        options.update({
+            'verify_ssl': self.options.get('verify_ssl', True),
+            'proxies': self.options.get('proxies', None)
+        })
         self.token = wrapped_resource(
-            make_request('post', url, options, verify_ssl))
+            make_request('post', url, options))
         self.access_token = self.token.access_token
 
     def _credentials_flow(self):
@@ -97,9 +103,12 @@ class Client(object):
             'password': self.options.get('password'),
             'grant_type': 'password'
         }
-        verify_ssl = self.options.get('verify_ssl', True)
+        options.update({
+            'verify_ssl': self.options.get('verify_ssl', True),
+            'proxies': self.options.get('proxies', None)
+        })
         self.token = wrapped_resource(
-            make_request('post', url, options, verify_ssl))
+            make_request('post', url, options))
         self.access_token = self.token.access_token
 
     def _request(self, method, resource, **kwargs):
@@ -113,8 +122,11 @@ class Client(object):
         if hasattr(self, 'client_id'):
             kwargs.update(dict(client_id=self.client_id))
 
-        verify_ssl = self.options.get('verify_ssl', True)
-        return wrapped_resource(make_request(method, url, kwargs, verify_ssl))
+        kwargs.update({
+            'verify_ssl': self.options.get('verify_ssl', True),
+            'proxies': self.options.get('proxies', None)
+        })
+        return wrapped_resource(make_request(method, url, kwargs))
 
     def __getattr__(self, name):
         """Translate an HTTP verb into a request method."""

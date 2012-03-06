@@ -79,7 +79,7 @@ def test_disabling_ssl_verification(fake_get):
     (fake_get.expects_call()
              .with_args(expected_url,
                         headers=headers,
-                        verify_ssl=False,
+                        verify=False,
                         allow_redirects=True)
              .returns(MockResponse("{}")))
     client.get('tracks', order='hotness', limit=5)
@@ -137,3 +137,28 @@ def test_method_dispatching_post_request(fake_post):
                          allow_redirects=True)
               .returns(MockResponse("{}")))
     client.post('tracks')
+
+
+@patch('requests.get')
+def test_proxy_servers(fake_request):
+    """Test that providing a dictionary of proxy servers works."""
+    proxies = {
+        'http': 'myproxyserver:1234'
+    }
+    client = soundcloud.Client(client_id='foo', proxies=proxies)
+    expected_url = "%s?%s" % (
+        client._resolve_resource_name('me'),
+        urlencode({
+            'client_id': 'foo'
+        })
+    )
+    headers = {
+        'User-Agent': soundcloud.USER_AGENT
+    }
+    (fake_request.expects_call()
+                 .with_args(expected_url,
+                            headers=headers,
+                            proxies=proxies,
+                            allow_redirects=True)
+                 .returns(MockResponse("{}")))
+    client.get('/me')
