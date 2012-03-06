@@ -145,6 +145,21 @@ Update your profile description: ::
         'description': "a new description"
     })
 
+Proxy Support
+-------------
+
+If you're behind a proxy, you can specify it when creating a client: ::
+
+    import soundcloud
+
+    proxies = {
+        'http': 'example.com:8000'
+    }
+    client = soundcloud.Client(access_token="a valid access token",
+                               proxies=proxies)
+
+The proxies kwarg is a dictionary with protocols as keys and host:port as values.
+
 Redirects
 ---------
 
