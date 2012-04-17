@@ -101,6 +101,7 @@ class Client(object):
             'client_secret': self.options.get('client_secret'),
             'username': self.options.get('username'),
             'password': self.options.get('password'),
+            'scope': getattr(self, 'scope', ''),
             'grant_type': 'password'
         }
         options.update({
