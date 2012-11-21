@@ -24,10 +24,12 @@ setup(
         '': ['README.rst']
     },
     install_requires=[
-        'nose==1.1.2',
         'fudge==1.0.3',
         'requests==0.10.1',
         'simplejson>=2.0',
+    ],
+    tests_require=[
+        'nose==1.1.2',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
