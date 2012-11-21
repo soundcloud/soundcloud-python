@@ -21,7 +21,7 @@ class Resource(object):
         if not hasattr(self, 'obj'):
             self.obj = {}
         for key, val in items:
-			self.obj[key] = val
+            self.obj[key] = val
 
     def __getattr__(self, name):
         if name in self.obj:
