@@ -68,6 +68,11 @@ def encode_multipart_formdata(fields, boundary=None):
 requests.models.encode_multipart_formdata = encode_multipart_formdata
 
 
+def is_file_like(f):
+    """Check to see if ```f``` has a ```read()``` method."""
+    return hasattr(f, 'read') and callable(f.read)
+
+
 def extract_files_from_dict(d):
     """Return any file objects from the provided dict.
 
@@ -83,7 +88,7 @@ def extract_files_from_dict(d):
     for key, value in d.iteritems():
         if isinstance(value, dict):
             files[key] = extract_files_from_dict(value)
-        elif isinstance(value, file):
+        elif is_file_like(value):
             files[key] = value
     return files
 
@@ -104,7 +109,7 @@ def remove_files_from_dict(d):
     for key, value in d.iteritems():
         if isinstance(value, dict):
             file_free[key] = remove_files_from_dict(value)
-        elif not isinstance(value, file):
+        elif not is_file_like(value):
             file_free[key] = str(value)
     return file_free
 
