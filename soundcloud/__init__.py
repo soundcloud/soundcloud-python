@@ -1,6 +1,6 @@
 """Python Soundcloud API Wrapper."""
 
-__version__ = '0.3.2'
+__version__ = '0.3.3'
 __all__ = ['Client']
 
 USER_AGENT = 'SoundCloud Python API Wrapper %s' % __version__
