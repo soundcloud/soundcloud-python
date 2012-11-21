@@ -138,7 +138,7 @@ class Client(object):
     def _resolve_resource_name(self, name):
         """Convert a resource name (e.g. tracks) into a URI."""
         if name[:4] == 'http':  # already a url
-            if name[:4] != 'json':
+            if name[:4] != 'json' and name[-8:] not in ['download', 'stream']:
                 return '%s.json' % (name,)
             return name
         name = name.rstrip('/').lstrip('/')
