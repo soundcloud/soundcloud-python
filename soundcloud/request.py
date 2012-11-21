@@ -105,7 +105,7 @@ def remove_files_from_dict(d):
         if isinstance(value, dict):
             file_free[key] = remove_files_from_dict(value)
         elif not isinstance(value, file):
-            file_free[key] = value
+            file_free[key] = str(value)
     return file_free
 
 
