@@ -15,6 +15,7 @@ from requests.packages.urllib3.packages.six import b
 from requests.packages.urllib3.filepost import get_content_type
 
 import soundcloud
+import hashconversions
 
 writer = codecs.lookup('utf-8')[3]
 
@@ -110,7 +111,10 @@ def remove_files_from_dict(d):
         if isinstance(value, dict):
             file_free[key] = remove_files_from_dict(value)
         elif not is_file_like(value):
-            file_free[key] = str(value)
+            if hasattr(value, '__iter__'):
+                file_free[key] = value
+            else:
+                file_free[key] = str(value)
     return file_free
 
 
@@ -161,6 +165,7 @@ def make_request(method, url, params):
     if 'allow_redirects' in params:
         del params['allow_redirects']
 
+    params = hashconversions.to_params(params)
     files = namespaced_query_string(extract_files_from_dict(params))
     data = namespaced_query_string(remove_files_from_dict(params))
 
