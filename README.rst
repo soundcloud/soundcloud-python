@@ -25,7 +25,7 @@ passing at a minimum the client id you obtained when you `registered
 your app`_: ::
 
     import soundcloud
-    
+
     client = soundcloud.Client(client_id=YOUR_CLIENT_ID)
 
 The client instance can then be used to fetch or modify resources: ::
@@ -58,7 +58,7 @@ this, you can use one of the following OAuth2 authorization flows.
 
 **Authorization Code Flow**
 
-The `Authorization Code Flow`_ involves redirecting the user to soundcloud.com 
+The `Authorization Code Flow`_ involves redirecting the user to soundcloud.com
 where they will log in and grant access to your application: ::
 
     import soundcloud
@@ -181,15 +181,17 @@ To run the tests, run: ::
     $ pip install -r requirements.txt
     $ nosetests --with-doctest
     ..................
-    
+
 Success!
 
 Contributing
 ------------
 
 Contributions are awesome. You are most welcome to `submit issues`_,
-`discuss soundcloud-python`_ or `fork the repository`_.
+or `fork the repository`_.
+
+soundcloud-python is published under a `BSD License`_.
 
 .. _`submit issues`: https://github.com/soundcloud/soundcloud-python/issues
-.. _`discuss soundcloud-python`: https://groups.google.com/group/soundcloudapi
 .. _`fork the repository`: https://github.com/soundcloud/soundcloud-python
+.. _`BSD License`: https://github.com/soundcloud/soundcloud-python/blob/master/README
