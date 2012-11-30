@@ -12,7 +12,7 @@ from io import BytesIO
 
 from requests.packages.urllib3.packages import six
 from requests.packages.urllib3.packages.six import b
-from requests.packages.urllib3.filepost import get_content_type
+from requests.packages.urllib3.filepost import get_content_type, iter_fields
 
 import soundcloud
 import hashconversions
@@ -34,7 +34,7 @@ def encode_multipart_formdata(fields, boundary=None):
     if boundary is None:
         boundary = choose_boundary()
 
-    for fieldname, value in six.iteritems(fields):
+    for fieldname, value in iter_fields(fields):
         body.write(b('--%s\r\n' % (boundary)))
 
         if isinstance(value, tuple):
