@@ -28,9 +28,9 @@ def test_properties_copied():
     """Certain properties should be copied to the wrapped resource."""
     response = MockResponse(json.dumps({'foo': 'bar'}),
                             status_code=200,
-                            error='This is an error',
+                            reason='OK',
                             url='http://example.com')
     resource = wrapped_resource(response)
     eq_(200, resource.status_code)
-    eq_('This is an error', resource.error)
+    eq_('OK', resource.reason)
     eq_('http://example.com', resource.url)
