@@ -58,6 +58,8 @@ def wrapped_resource(response):
     else:
         result = Resource(content)
     result.raw_data = response.content
-    for attr in ['url', 'status_code', 'error']:
+
+    for attr in ('url', 'status_code', 'reason'):
         setattr(result, attr, getattr(response, attr))
+
     return result
