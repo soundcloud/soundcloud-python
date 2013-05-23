@@ -30,7 +30,7 @@ your app`_: ::
 
 The client instance can then be used to fetch or modify resources: ::
 
-    tracks = client.get('/tracks', order='hotness', limit=10)
+    tracks = client.get('/tracks', limit=10)
     for track in tracks:
         print track.title
     app = client.get('/apps/124')
