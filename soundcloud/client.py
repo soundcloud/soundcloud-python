@@ -129,11 +129,11 @@ class Client(object):
         })
         return wrapped_resource(make_request(method, url, kwargs))
 
-    def __getattr__(self, name):
+    def __getattr__(self, name, **kwargs):
         """Translate an HTTP verb into a request method."""
         if name not in ['get', 'post', 'put', 'head', 'delete']:
             raise AttributeError
-        return partial(self._request, name)
+        return partial(self._request, name, **kwargs)
 
     def _resolve_resource_name(self, name):
         """Convert a resource name (e.g. tracks) into a URI."""
