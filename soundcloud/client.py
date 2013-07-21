@@ -131,14 +131,14 @@ class Client(object):
 
     def __getattr__(self, name, **kwargs):
         """Translate an HTTP verb into a request method."""
-        if name not in ['get', 'post', 'put', 'head', 'delete']:
+        if name not in ('get', 'post', 'put', 'head', 'delete'):
             raise AttributeError
         return partial(self._request, name, **kwargs)
 
     def _resolve_resource_name(self, name):
         """Convert a resource name (e.g. tracks) into a URI."""
         if name[:4] == 'http':  # already a url
-            if name[:4] != 'json' and name[-8:] not in ['download', 'stream']:
+            if name[:4] != 'json' and name[-8:] not in ('download', 'stream'):
                 return '%s.json' % (name,)
             return name
         name = name.rstrip('/').lstrip('/')

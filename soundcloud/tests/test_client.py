@@ -47,7 +47,7 @@ def test_url_creation_options():
 def test_method_dispatching():
     """Test that getattr is doing right by us."""
     client = soundcloud.Client(client_id='foo')
-    for method in ['get', 'post', 'put', 'delete', 'head']:
+    for method in ('get', 'post', 'put', 'delete', 'head'):
         p = getattr(client, method)
         eq_((method,), p.args)
         eq_('_request', p.func.__name__)

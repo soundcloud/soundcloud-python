@@ -11,13 +11,16 @@ except ImportError:
 from io import BytesIO
 
 from requests.packages.urllib3.packages import six
-from requests.packages.urllib3.packages.six import b
 from requests.packages.urllib3.filepost import get_content_type, iter_fields
 
 import soundcloud
 import hashconversions
 
 writer = codecs.lookup('utf-8')[3]
+
+
+def b(s):
+    return s.encode('utf-8')
 
 
 def encode_multipart_formdata(fields, boundary=None):
@@ -39,15 +42,14 @@ def encode_multipart_formdata(fields, boundary=None):
 
         if isinstance(value, tuple):
             filename, data = value
-            writer(body).write('Content-Disposition: form-data; name="%s"; '
-                               'filename="%s"\r\n' % (fieldname, filename))
-            body.write(b('Content-Type: %s\r\n\r\n' %
-                         (get_content_type(filename))))
+            writer(body).write(b(u'Content-Disposition: form-data; name="{0}"; '
+                               u'filename="{1}"\r\n'.format(fieldname, filename)))
+            body.write(b(u'Content-Type: {0}\r\n\r\n'.format(get_content_type(filename))))
         else:
             data = value
             writer(body).write(
-                'Content-Disposition: form-data; name="%s"\r\n\r\n' % (
-                    fieldname))
+                b(u'Content-Disposition: form-data; name="{0}"\r\n\r\n'.format(
+                    fieldname)))
 
         if isinstance(data, int):
             data = str(int)  # Backwards compatibility
@@ -57,11 +59,11 @@ def encode_multipart_formdata(fields, boundary=None):
         else:
             body.write(data)
 
-        body.write(b'\r\n')
+        body.write('\r\n')
 
-    body.write(b('--%s--\r\n' % (boundary)))
+    body.write(b(u'--{0}--\r\n'.format(boundary)))
 
-    content_type = b('multipart/form-data; boundary=%s' % boundary)
+    content_type = b(u'multipart/form-data; boundary={0}'.format(boundary))
 
     return body.getvalue(), content_type
 
@@ -114,7 +116,10 @@ def remove_files_from_dict(d):
             if hasattr(value, '__iter__'):
                 file_free[key] = value
             else:
-                file_free[key] = str(value)
+                if hasattr(value, 'encode'):
+                    file_free[key] = value.encode('utf-8')
+                else:
+                    file_free[key] = str(value)
     return file_free
 
 
@@ -139,11 +144,17 @@ def namespaced_query_string(d, prefix=""):
 def make_request(method, url, params):
     """Make an HTTP request, formatting params as required."""
     empty = []
+
+    # TODO
+    # del params[key]
+    # without list
     for key, value in params.iteritems():
         if value is None:
             empty.append(key)
     for key in empty:
         del params[key]
+
+    
 
     # allow caller to disable automatic following of redirects
     allow_redirects = params.get('allow_redirects', True)
@@ -183,7 +194,7 @@ def make_request(method, url, params):
         result = request_func(url, **kwargs)
 
     # if redirects are disabled, don't raise for 301 / 302
-    if result.status_code in [301, 302]:
+    if result.status_code in (301, 302):
         if allow_redirects:
             result.raise_for_status()
     else:
