@@ -69,7 +69,6 @@ def test_disabling_ssl_verification(fake_get):
     expected_url = '%s?%s' % (
         client._resolve_resource_name('tracks'),
         urlencode({
-            'order': 'hotness',
             'limit': 5,
             'client_id': 'foo'
         }))
@@ -82,7 +81,7 @@ def test_disabling_ssl_verification(fake_get):
                         verify=False,
                         allow_redirects=True)
              .returns(MockResponse("{}")))
-    client.get('tracks', order='hotness', limit=5)
+    client.get('tracks', limit=5)
 
 
 @raises(AttributeError)
@@ -102,7 +101,6 @@ def test_method_dispatching_get_request_readonly(fake_get):
     expected_url = '%s?%s' % (
         client._resolve_resource_name('tracks'),
         urlencode({
-            'order': 'hotness',
             'limit': 5,
             'client_id': 'foo'
         }))
@@ -112,7 +110,7 @@ def test_method_dispatching_get_request_readonly(fake_get):
     (fake_get.expects_call()
              .with_args(expected_url, headers=headers, allow_redirects=True)
              .returns(MockResponse("{}")))
-    client.get('tracks', order='hotness', limit=5)
+    client.get('tracks', limit=5)
 
 
 @patch('requests.post')
