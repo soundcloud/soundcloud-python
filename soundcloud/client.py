@@ -47,7 +47,7 @@ class Client(object):
         url = '%s%s/oauth2/token' % (self.scheme, self.host)
         options = {
             'grant_type': 'authorization_code',
-            'redirect_uri': self.options.get('redirect_uri'),
+            'redirect_uri': self._redirect_uri(),
             'client_id': self.options.get('client_id'),
             'client_secret': self.options.get('client_secret'),
             'code': code,
@@ -71,7 +71,7 @@ class Client(object):
             'scope': getattr(self, 'scope', 'non-expiring'),
             'client_id': self.options.get('client_id'),
             'response_type': 'code',
-            'redirect_uri': self.options.get('redirect_uri')
+            'redirect_uri': self._redirect_uri()
         }
         url = '%s%s/connect' % (self.scheme, self.host)
         self._authorize_url = '%s?%s' % (url, urlencode(options))
@@ -144,8 +144,16 @@ class Client(object):
         name = name.rstrip('/').lstrip('/')
         return '%s%s/%s.json' % (self.scheme, self.host, name)
 
-    # Helper functions for testing arguments provided to the constructor.
+    def _redirect_uri(self):
+        """
+        Return the redirect uri. Checks for ``redirect_uri`` or common typo,
+        ``redirect_url``
+        """
+        return self.options.get(
+            'redirect_uri',
+            self.options.get('redirect_url', None))
 
+    # Helper functions for testing arguments provided to the constructor.
     def _options_present(self, options, kwargs):
         return all(map(lambda k: k in kwargs, options))
 
@@ -155,7 +163,9 @@ class Client(object):
 
     def _options_for_authorization_code_flow_present(self):
         required = ('client_id', 'redirect_uri')
-        return self._options_present(required, self.options)
+        or_required = ('client_id', 'redirect_url')
+        return (self._options_present(required, self.options) or
+                self._options_present(or_required, self.options))
 
     def _options_for_token_refresh_present(self):
         required = ('client_id', 'client_secret', 'refresh_token')
