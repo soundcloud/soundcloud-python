@@ -1,74 +1,9 @@
-import codecs
 import urllib
 
 import requests
 
-try:
-    from mimetools import choose_boundary
-except ImportError:
-    from requests.packages.urllib3.packages.mimetools_choose_boundary import choose_boundary
-
-from io import BytesIO
-
-from requests.packages.urllib3.packages import six
-from requests.packages.urllib3.filepost import get_content_type, iter_fields
-
 import soundcloud
 import hashconversions
-
-writer = codecs.lookup('utf-8')[3]
-
-
-def b(s):
-    return s.encode('utf-8')
-
-
-def encode_multipart_formdata(fields, boundary=None):
-    """Fix bug in multipart/form-data POST request handling.
-
-    For some reason, the specific combination of Rack + Ruby + Rails versions
-    that we are using in production has trouble handling multipart/form-data
-    POST requests where the non-binary parts have a Content-Type header. To
-    get around this, we just monkey patch the ```encode_multipart_formdata```
-    function in ```urllib3``` and modify it to *not* set the Content-Type
-    header on non-binary parts.
-    """
-    body = BytesIO()
-    if boundary is None:
-        boundary = choose_boundary()
-
-    for fieldname, value in iter_fields(fields):
-        body.write(b('--%s\r\n' % (boundary)))
-
-        if isinstance(value, tuple):
-            filename, data = value
-            writer(body).write(b(u'Content-Disposition: form-data; name="{0}"; '
-                               u'filename="{1}"\r\n'.format(fieldname, filename)))
-            body.write(b(u'Content-Type: {0}\r\n\r\n'.format(get_content_type(filename))))
-        else:
-            data = value
-            writer(body).write(
-                b(u'Content-Disposition: form-data; name="{0}"\r\n\r\n'.format(
-                    fieldname)))
-
-        if isinstance(data, int):
-            data = str(int)  # Backwards compatibility
-
-        if isinstance(data, six.text_type):
-            writer(body).write(data)
-        else:
-            body.write(data)
-
-        body.write('\r\n')
-
-    body.write(b(u'--{0}--\r\n'.format(boundary)))
-
-    content_type = b(u'multipart/form-data; boundary={0}'.format(boundary))
-
-    return body.getvalue(), content_type
-
-# monkey patch urllib3 to use our modified function
-requests.models.encode_multipart_formdata = encode_multipart_formdata
 
 
 def is_file_like(f):
@@ -153,8 +88,6 @@ def make_request(method, url, params):
             empty.append(key)
     for key in empty:
         del params[key]
-
-    
 
     # allow caller to disable automatic following of redirects
     allow_redirects = params.get('allow_redirects', True)
