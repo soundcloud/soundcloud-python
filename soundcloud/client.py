@@ -142,6 +142,8 @@ class Client(object):
                 return '%s.json' % (name,)
             return name
         name = name.rstrip('/').lstrip('/')
+        if name[-13:] == 'contributions':
+            return '%s%s/%s' % (self.scheme, self.host, name)
         return '%s%s/%s.json' % (self.scheme, self.host, name)
 
     def _redirect_uri(self):
