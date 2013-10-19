@@ -1,5 +1,7 @@
 import re
 
+from distribute_setup import use_setuptools
+use_setuptools()
 from setuptools import setup
 
 version = None
@@ -20,6 +22,7 @@ setup(
     license='BSD',
     packages=['soundcloud'],
     include_package_data=True,
+    use_2to3=True,
     package_data={
         '': ['README.rst']
     },
@@ -29,7 +32,7 @@ setup(
         'simplejson>=2.0',
     ],
     tests_require=[
-        'nose==1.1.2',
+        'nose>=1.1.2',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
