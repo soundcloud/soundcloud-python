@@ -32,7 +32,7 @@ setup(
         'simplejson>=2.0',
     ],
     tests_require=[
-        'nose==1.1.2',
+        'nose>=1.1.2',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
