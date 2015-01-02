@@ -48,8 +48,8 @@ def wrapped_resource(response):
     Lists will be returned as a ```ResourceList``` instance,
     dicts will be returned as a ```Resource``` instance.
     """
-    # decode response text
-    response_content = response.content.decode(response.encoding)
+    # decode response text, assuming utf-8 if unset
+    response_content = response.content.decode(response.encoding or 'utf-8')
 
     try:
         content = json.loads(response_content)
