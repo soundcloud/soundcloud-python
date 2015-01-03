@@ -13,6 +13,8 @@ class Resource(object):
     """
     def __init__(self, obj):
         self.obj = obj
+        if hasattr(self, 'origin'):
+            self.origin = Resource(self.origin)
 
     def __getstate__(self):
         return self.obj.items()
