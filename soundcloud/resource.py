@@ -60,6 +60,8 @@ def wrapped_resource(response):
         result = ResourceList(content)
     else:
         result = Resource(content)
+        if hasattr(result, 'collection'):
+            result.collection = ResourceList(result.collection)
     result.raw_data = response_content
 
     for attr in ('encoding', 'url', 'status_code', 'reason'):
