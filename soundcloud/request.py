@@ -23,7 +23,7 @@ def extract_files_from_dict(d):
     ... 'oauth_token': 'foo',
     ... 'track': {
     ...   'title': 'bar',
-    ...   'asset_data': file('setup.py', 'rb')
+    ...   'asset_data': open('setup.py', 'rb')
     ...  }})  # doctest:+ELLIPSIS
     {'track': {'asset_data': <open file 'setup.py', mode 'rb' at 0x...}}
     """
@@ -43,7 +43,7 @@ def remove_files_from_dict(d):
     ...   'oauth_token': 'foo',
     ...   'track': {
     ...       'title': 'bar',
-    ...       'asset_data': file('setup.py', 'rb')
+    ...       'asset_data': open('setup.py', 'rb')
     ...   }
     ... })  # doctest:+ELLIPSIS
     {'track': {'title': 'bar'}, 'oauth_token': 'foo'}
