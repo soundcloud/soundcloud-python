@@ -1,6 +1,9 @@
 import re
 import collections
-from urllib import quote_plus
+try:
+    from urllib import quote_plus
+except ImportError:
+    from urllib.parse import quote_plus
 
 
 def to_params(hash):

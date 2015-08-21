@@ -1,9 +1,13 @@
-import urllib
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
 
 import requests
 
 import soundcloud
-import hashconversions
+
+from . import hashconversions
 
 
 def is_file_like(f):
@@ -119,7 +123,7 @@ def make_request(method, url, params):
 
     if method == 'get':
         kwargs['headers']['Accept'] = 'application/json'
-        qs = urllib.urlencode(data)
+        qs = urlencode(data)
         if '?' in url:
             url_qs = '%s&%s' % (url, qs)
         else:

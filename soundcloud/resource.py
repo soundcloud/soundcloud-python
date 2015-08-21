@@ -3,7 +3,10 @@ try:
 except ImportError:
     import simplejson as json
 
-from UserList import UserList
+try:
+    from UserList import UserList
+except ImportError:
+    from collections import UserList
 
 
 class Resource(object):

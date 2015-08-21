@@ -2,7 +2,10 @@ import soundcloud
 
 from soundcloud.tests.utils import MockResponse
 
-from urllib import urlencode
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
 
 from nose.tools import eq_, raises
 from fudge import patch
