@@ -25,7 +25,7 @@ def extract_files_from_dict(d):
     ...   'title': 'bar',
     ...   'asset_data': open('setup.py', 'rb')
     ...  }})  # doctest:+ELLIPSIS
-    {'track': {'asset_data': <open file 'setup.py', mode 'rb' at 0x...}}
+    {'track': {'asset_data': <...}}
     """
     files = {}
     for key, value in six.iteritems(d):
