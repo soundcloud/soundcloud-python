@@ -5,9 +5,11 @@ try:
 except ImportError:
     from urllib.parse import quote_plus
 
+import six
+
 
 def to_params(hash):
-    normalized = [normalize_param(k, v) for (k, v) in hash.iteritems()]
+    normalized = [normalize_param(k, v) for (k, v) in six.iteritems(hash)]
     return dict((k, v) for d in normalized for (k, v) in d.items())
 
 
@@ -52,7 +54,7 @@ def normalize_param(key, value):
         params.update({key: value})
 
     for (parent, hash) in stack:
-        for (key, value) in hash.iteritems():
+        for (key, value) in six.iteritems(hash):
             if isinstance(value, dict):
                 stack.append([u"{0[parent]}[{0[key]}]".format(dict(parent=parent, key=key)), value])
             else:

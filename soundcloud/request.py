@@ -4,6 +4,7 @@ except ImportError:
     from urllib.parse import urlencode
 
 import requests
+import six
 
 import soundcloud
 
@@ -27,7 +28,7 @@ def extract_files_from_dict(d):
     {'track': {'asset_data': <open file 'setup.py', mode 'rb' at 0x...}}
     """
     files = {}
-    for key, value in d.iteritems():
+    for key, value in six.iteritems(d):
         if isinstance(value, dict):
             files[key] = extract_files_from_dict(value)
         elif is_file_like(value):
@@ -48,7 +49,7 @@ def remove_files_from_dict(d):
     {'track': {'title': 'bar'}, 'oauth_token': 'foo'}
     """
     file_free = {}
-    for key, value in d.iteritems():
+    for key, value in six.iteritems(d):
         if isinstance(value, dict):
             file_free[key] = remove_files_from_dict(value)
         elif not is_file_like(value):
@@ -72,7 +73,7 @@ def namespaced_query_string(d, prefix=""):
     """
     qs = {}
     prefixed = lambda k: prefix and "%s[%s]" % (prefix, k) or k
-    for key, value in d.iteritems():
+    for key, value in six.iteritems(d):
         if isinstance(value, dict):
             qs.update(namespaced_query_string(value, prefix=key))
         else:
@@ -87,7 +88,7 @@ def make_request(method, url, params):
     # TODO
     # del params[key]
     # without list
-    for key, value in params.iteritems():
+    for key, value in six.iteritems(params):
         if value is None:
             empty.append(key)
     for key in empty:
