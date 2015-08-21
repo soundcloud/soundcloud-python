@@ -7,7 +7,7 @@ except ImportError:
 
 
 def to_params(hash):
-    normalized = map(lambda (k, v): normalize_param(k, v), hash.iteritems())
+    normalized = [normalize_param(k, v) for (k, v) in hash.iteritems()]
     return dict((k, v) for d in normalized for (k, v) in d.items())
 
 
@@ -33,7 +33,7 @@ def normalize_param(key, value):
     params = {}
     stack = []
     if isinstance(value, list):
-        normalized = map(lambda e: normalize_param(u"{0[key]}[]".format(dict(key=key)), e), value)
+        normalized = [normalize_param(u"{0[key]}[]".format(dict(key=key)), e) for e in value]
         keys = [item for sublist in tuple(h.keys() for h in normalized) for item in sublist]
 
         lists = {}
