@@ -23,14 +23,18 @@ def normalize_param(key, value):
     ...  'sharing': 'private',
     ...  'tracks': [
     ...    {id: 1234}, {id: 4567}
-    ...  ]})  # doctest:+ELLIPSIS
-    {u'playlist[tracks][][<built-in function id>]': [1234, 4567], u'playlist[sharing]': 'private', u'playlist[title]': 'foo'}
+    ...  ]}) == {
+    ...     u'playlist[tracks][][<built-in function id>]': [1234, 4567],
+    ...     u'playlist[sharing]': 'private',
+    ...     u'playlist[title]': 'foo'}  # doctest:+ELLIPSIS
+    True
 
     >>> normalize_param('oauth_token', 'foo')
     {'oauth_token': 'foo'}
 
-    >>> normalize_param('playlist[tracks]', [1234, 4567])
-    {u'playlist[tracks][]': [1234, 4567]}
+    >>> normalize_param('playlist[tracks]', [1234, 4567]) == {
+    ...     u'playlist[tracks][]': [1234, 4567]}
+    True
     """
     params = {}
     stack = []

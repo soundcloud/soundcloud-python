@@ -45,8 +45,9 @@ def remove_files_from_dict(d):
     ...       'title': 'bar',
     ...       'asset_data': open('setup.py', 'rb')
     ...   }
-    ... })  # doctest:+ELLIPSIS
-    {'track': {'title': 'bar'}, 'oauth_token': 'foo'}
+    ... }) == {'track': {'title': 'bar'}, 'oauth_token': 'foo'}
+    ... # doctest:+ELLIPSIS
+    True
     """
     file_free = {}
     for key, value in six.iteritems(d):
@@ -68,8 +69,11 @@ def namespaced_query_string(d, prefix=""):
 
     >>> namespaced_query_string({
     ...  'oauth_token': 'foo',
-    ...  'track': {'title': 'bar', 'sharing': 'private'}})  # doctest:+ELLIPSIS
-    {'track[sharing]': 'private', 'oauth_token': 'foo', 'track[title]': 'bar'}
+    ...  'track': {'title': 'bar', 'sharing': 'private'}}) == {
+    ...      'track[sharing]': 'private',
+    ...      'oauth_token': 'foo',
+    ...      'track[title]': 'bar'}  # doctest:+ELLIPSIS
+    True
     """
     qs = {}
     prefixed = lambda k: prefix and "%s[%s]" % (prefix, k) or k
