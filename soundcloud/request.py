@@ -118,8 +118,13 @@ def make_request(method, url, params):
         raise TypeError('Unknown method: %s' % (method,))
 
     if method == 'get':
+        kwargs['headers']['Accept'] = 'application/json'
         qs = urllib.urlencode(data)
-        result = request_func('%s?%s' % (url, qs), **kwargs)
+        if '?' in url:
+            url_qs = '%s&%s' % (url, qs)
+        else:
+            url_qs = '%s?%s' % (url, qs)
+        result = request_func(url_qs, **kwargs)
     else:
         kwargs['data'] = data
         if files:

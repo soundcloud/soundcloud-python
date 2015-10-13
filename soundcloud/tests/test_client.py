@@ -31,9 +31,9 @@ def test_url_creation():
     """Test that resources are turned into urls properly."""
     client = soundcloud.Client(client_id='foo')
     url = client._resolve_resource_name('tracks')
-    eq_('https://api.soundcloud.com/tracks.json', url)
+    eq_('https://api.soundcloud.com/tracks', url)
     url = client._resolve_resource_name('/tracks/')
-    eq_('https://api.soundcloud.com/tracks.json', url)
+    eq_('https://api.soundcloud.com/tracks', url)
 
 
 def test_url_creation_options():
@@ -41,7 +41,7 @@ def test_url_creation_options():
     client = soundcloud.Client(client_id='foo', use_ssl=False)
     client.host = 'soundcloud.dev'
     url = client._resolve_resource_name('apps/132445')
-    eq_('http://soundcloud.dev/apps/132445.json', url)
+    eq_('http://soundcloud.dev/apps/132445', url)
 
 
 def test_method_dispatching():
@@ -73,7 +73,8 @@ def test_disabling_ssl_verification(fake_get):
             'client_id': 'foo'
         }))
     headers = {
-        'User-Agent': soundcloud.USER_AGENT
+        'User-Agent': soundcloud.USER_AGENT,
+        'Accept': 'application/json'
     }
     (fake_get.expects_call()
              .with_args(expected_url,
@@ -105,7 +106,8 @@ def test_method_dispatching_get_request_readonly(fake_get):
             'client_id': 'foo'
         }))
     headers = {
-        'User-Agent': soundcloud.USER_AGENT
+        'User-Agent': soundcloud.USER_AGENT,
+        'Accept': 'application/json'
     }
     (fake_get.expects_call()
              .with_args(expected_url, headers=headers, allow_redirects=True)
@@ -151,7 +153,8 @@ def test_proxy_servers(fake_request):
         })
     )
     headers = {
-        'User-Agent': soundcloud.USER_AGENT
+        'User-Agent': soundcloud.USER_AGENT,
+        'Accept': 'application/json'
     }
     (fake_request.expects_call()
                  .with_args(expected_url,

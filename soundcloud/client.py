@@ -138,13 +138,9 @@ class Client(object):
     def _resolve_resource_name(self, name):
         """Convert a resource name (e.g. tracks) into a URI."""
         if name[:4] == 'http':  # already a url
-            if name[:4] != 'json' and name[-8:] not in ('download', 'stream'):
-                return '%s.json' % (name,)
             return name
         name = name.rstrip('/').lstrip('/')
-        if name[-13:] == 'contributions':
-            return '%s%s/%s' % (self.scheme, self.host, name)
-        return '%s%s/%s.json' % (self.scheme, self.host, name)
+        return '%s%s/%s' % (self.scheme, self.host, name)
 
     def _redirect_uri(self):
         """
