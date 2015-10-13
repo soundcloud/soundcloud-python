@@ -2,6 +2,9 @@
 soundcloud-python
 =================
 
+.. image:: https://travis-ci.org/soundcloud/soundcloud-python.svg
+    :target: https://travis-ci.org/soundcloud/soundcloud-python
+
 A friendly wrapper around the `Soundcloud API`_.
 
 .. _Soundcloud API: http://developers.soundcloud.com/
