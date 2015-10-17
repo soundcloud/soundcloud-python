@@ -1,10 +1,15 @@
 import re
 import collections
-from urllib import quote_plus
+try:
+    from urllib import quote_plus
+except ImportError:
+    from urllib.parse import quote_plus
+
+import six
 
 
 def to_params(hash):
-    normalized = map(lambda (k, v): normalize_param(k, v), hash.iteritems())
+    normalized = [normalize_param(k, v) for (k, v) in six.iteritems(hash)]
     return dict((k, v) for d in normalized for (k, v) in d.items())
 
 
@@ -18,19 +23,23 @@ def normalize_param(key, value):
     ...  'sharing': 'private',
     ...  'tracks': [
     ...    {id: 1234}, {id: 4567}
-    ...  ]})  # doctest:+ELLIPSIS
-    {u'playlist[tracks][][<built-in function id>]': [1234, 4567], u'playlist[sharing]': 'private', u'playlist[title]': 'foo'}
+    ...  ]}) == {
+    ...     u'playlist[tracks][][<built-in function id>]': [1234, 4567],
+    ...     u'playlist[sharing]': 'private',
+    ...     u'playlist[title]': 'foo'}  # doctest:+ELLIPSIS
+    True
 
     >>> normalize_param('oauth_token', 'foo')
     {'oauth_token': 'foo'}
 
-    >>> normalize_param('playlist[tracks]', [1234, 4567])
-    {u'playlist[tracks][]': [1234, 4567]}
+    >>> normalize_param('playlist[tracks]', [1234, 4567]) == {
+    ...     u'playlist[tracks][]': [1234, 4567]}
+    True
     """
     params = {}
     stack = []
     if isinstance(value, list):
-        normalized = map(lambda e: normalize_param(u"{0[key]}[]".format(dict(key=key)), e), value)
+        normalized = [normalize_param(u"{0[key]}[]".format(dict(key=key)), e) for e in value]
         keys = [item for sublist in tuple(h.keys() for h in normalized) for item in sublist]
 
         lists = {}
@@ -49,7 +58,7 @@ def normalize_param(key, value):
         params.update({key: value})
 
     for (parent, hash) in stack:
-        for (key, value) in hash.iteritems():
+        for (key, value) in six.iteritems(hash):
             if isinstance(value, dict):
                 stack.append([u"{0[parent]}[{0[key]}]".format(dict(parent=parent, key=key)), value])
             else:

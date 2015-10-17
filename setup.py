@@ -1,8 +1,7 @@
 import re
 
-from distribute_setup import use_setuptools
-use_setuptools()
 from setuptools import setup
+
 
 version = None
 for line in open('./soundcloud/__init__.py'):
@@ -22,7 +21,6 @@ setup(
     license='BSD',
     packages=['soundcloud'],
     include_package_data=True,
-    use_2to3=True,
     package_data={
         '': ['README.rst']
     },

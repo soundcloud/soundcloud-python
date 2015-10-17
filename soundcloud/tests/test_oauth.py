@@ -1,5 +1,8 @@
 from contextlib import contextmanager
-from urllib import urlencode
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
 
 from nose.tools import eq_
 

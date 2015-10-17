@@ -1,9 +1,14 @@
-import urllib
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
 
 import requests
+import six
 
 import soundcloud
-import hashconversions
+
+from . import hashconversions
 
 
 def is_file_like(f):
@@ -18,12 +23,12 @@ def extract_files_from_dict(d):
     ... 'oauth_token': 'foo',
     ... 'track': {
     ...   'title': 'bar',
-    ...   'asset_data': file('setup.py', 'rb')
+    ...   'asset_data': open('setup.py', 'rb')
     ...  }})  # doctest:+ELLIPSIS
-    {'track': {'asset_data': <open file 'setup.py', mode 'rb' at 0x...}}
+    {'track': {'asset_data': <...}}
     """
     files = {}
-    for key, value in d.iteritems():
+    for key, value in six.iteritems(d):
         if isinstance(value, dict):
             files[key] = extract_files_from_dict(value)
         elif is_file_like(value):
@@ -38,13 +43,14 @@ def remove_files_from_dict(d):
     ...   'oauth_token': 'foo',
     ...   'track': {
     ...       'title': 'bar',
-    ...       'asset_data': file('setup.py', 'rb')
+    ...       'asset_data': open('setup.py', 'rb')
     ...   }
-    ... })  # doctest:+ELLIPSIS
-    {'track': {'title': 'bar'}, 'oauth_token': 'foo'}
+    ... }) == {'track': {'title': 'bar'}, 'oauth_token': 'foo'}
+    ... # doctest:+ELLIPSIS
+    True
     """
     file_free = {}
-    for key, value in d.iteritems():
+    for key, value in six.iteritems(d):
         if isinstance(value, dict):
             file_free[key] = remove_files_from_dict(value)
         elif not is_file_like(value):
@@ -63,12 +69,15 @@ def namespaced_query_string(d, prefix=""):
 
     >>> namespaced_query_string({
     ...  'oauth_token': 'foo',
-    ...  'track': {'title': 'bar', 'sharing': 'private'}})  # doctest:+ELLIPSIS
-    {'track[sharing]': 'private', 'oauth_token': 'foo', 'track[title]': 'bar'}
+    ...  'track': {'title': 'bar', 'sharing': 'private'}}) == {
+    ...      'track[sharing]': 'private',
+    ...      'oauth_token': 'foo',
+    ...      'track[title]': 'bar'}  # doctest:+ELLIPSIS
+    True
     """
     qs = {}
     prefixed = lambda k: prefix and "%s[%s]" % (prefix, k) or k
-    for key, value in d.iteritems():
+    for key, value in six.iteritems(d):
         if isinstance(value, dict):
             qs.update(namespaced_query_string(value, prefix=key))
         else:
@@ -83,7 +92,7 @@ def make_request(method, url, params):
     # TODO
     # del params[key]
     # without list
-    for key, value in params.iteritems():
+    for key, value in six.iteritems(params):
         if value is None:
             empty.append(key)
     for key in empty:
@@ -119,7 +128,7 @@ def make_request(method, url, params):
 
     if method == 'get':
         kwargs['headers']['Accept'] = 'application/json'
-        qs = urllib.urlencode(data)
+        qs = urlencode(data)
         if '?' in url:
             url_qs = '%s&%s' % (url, qs)
         else:

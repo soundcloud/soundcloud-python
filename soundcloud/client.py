@@ -1,5 +1,8 @@
 from functools import partial
-from urllib import urlencode
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
 
 from soundcloud.resource import wrapped_resource
 from soundcloud.request import make_request
