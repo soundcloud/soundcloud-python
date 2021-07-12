@@ -102,10 +102,8 @@ class Client(object):
         options = {
             'client_id': self.options.get('client_id'),
             'client_secret': self.options.get('client_secret'),
-            'username': self.options.get('username'),
-            'password': self.options.get('password'),
             'scope': getattr(self, 'scope', ''),
-            'grant_type': 'password'
+            'grant_type': 'client_credentials'
         }
         options.update({
             'verify_ssl': self.options.get('verify_ssl', True),
@@ -159,7 +157,7 @@ class Client(object):
         return all(map(lambda k: k in kwargs, options))
 
     def _options_for_credentials_flow_present(self):
-        required = ('client_id', 'client_secret', 'username', 'password')
+        required = ('client_id', 'client_secret')
         return self._options_present(required, self.options)
 
     def _options_for_authorization_code_flow_present(self):
