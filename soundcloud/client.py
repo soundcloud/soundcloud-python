@@ -12,7 +12,7 @@ class Client(object):
     """A client for interacting with Soundcloud resources."""
 
     use_ssl = True
-    host = 'api.soundcloud.com'
+    host = 'api-v2.soundcloud.com'
 
     def __init__(self, **kwargs):
         """Create a client instance with the provided options. Options should
