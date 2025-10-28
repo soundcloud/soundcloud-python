@@ -1,4 +1,3 @@
-recursive-include soundcloud *.py
 include distribute_setup.py
 include LICENSE
 include *.txt
